@@ -1,0 +1,10 @@
+<html>
+<head>
+@include('storefront.homepage.head')
+</head>
+<body>
+@include('storefront.parts.header')
+@include('storefront.parts.main')
+@include('storefront.parts.footer')
+</body>
+</html>

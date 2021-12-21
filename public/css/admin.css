@@ -1,0 +1,244 @@
+:root {
+    --bodt-background-color: #cddafd;
+    --content-background-color: #eae4e9;
+    --menu-background-color: #e2ece9;
+    --sub-menu-background-color: rgba(242, 140, 178, 1);
+    --menu-text-color: black;
+    --menu-hover-color: rgba(250, 210, 225, 0.46);
+    --menu-list-border-color: mediumvioletred;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+button {
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background-color: var(--bodt-background-color);
+}
+
+#crud-message {
+    background-color: green;
+    height: 20px;
+    width: 100%;
+    color: white;
+    text-align: center;
+    display: none;
+}
+
+#menu li {
+    text-decoration: none;
+    list-style: none;
+}
+
+#menu a {
+    text-decoration: none;
+    color: var(--menu-text-color);
+}
+
+#menu a:visited {
+    color: var(--menu-text-color);
+}
+
+.sub-menu {
+    margin-left: 20px;
+    background-color: var(--sub-menu-background-color);
+}
+
+/**
+CRUD table start
+ */
+#crud-message .slide {
+    display: block;
+    transition: step-start 1s;
+}
+
+.entity_table_view th, td {
+    width: 100px;
+    position: relative;
+    padding: 10px;
+    text-align: left;
+}
+
+.entity_table_view td:last-child {
+    text-align: center;
+}
+
+.entity_table_view thead {
+    background-color: #333;
+    color: #FDFDFD;
+}
+
+#menu .sub-products {
+    display: none;
+}
+
+.entity_table_view tbody tr:nth-child(even) {
+    background-color: #DDD;
+}
+
+.entity_table_view table {
+    width: 100%;
+    overflow: scroll;
+    background-color: white;
+}
+
+.add-form .for_data_input {
+    width: 100px !important;
+    position: relative;
+}
+
+.add-form div {
+    padding: 5px;
+}
+
+.entity_table_view {
+    width: 70%;
+    border-collapse: collapse;
+    margin: 40px auto;
+}
+
+.delete-btn {
+    background-color: darkred;
+    color: white;
+    width: 40%;
+    line-height: 20px;
+    border-radius: 7px;
+    padding: 3px;
+    transition: 0.2s ease-in;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+.create-btn {
+    background-color: #1e7e34;
+    color: white;
+    width: 70%;
+    line-height: 20px;
+    border-radius: 7px;
+    padding: 3px;
+    transition: 0.2s ease-in;
+}
+
+
+.entity_table_view input {
+    width: 100%;
+    height: 40px;
+    border: none;
+    border-bottom: 1px solid #333;
+    padding: 0 5px;
+    font-size: 15px;
+}
+
+/**
+End CRUD table
+ */
+
+#menu {
+    color: var(--menu-text-color);
+    background-color: var(--menu-background-color);
+    width: 200px;
+    height: 100%;
+    position: relative;
+}
+
+#menu .site-title {
+    margin-top: 15px;
+    height: 50px;
+    border-bottom: 1px solid;
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+}
+
+#menu-list li {
+    padding: 10px;
+    margin: 5px;
+    height: 20px;
+}
+
+.table_add_form {
+    margin-top: 50px;
+    border-radius: 10px;
+}
+
+.add-form td {
+    display: block;
+    text-align: center;
+}
+
+#add-composition {
+    border: 1px solid black;
+    border-radius: 20px;
+    text-align: center !important;
+}
+
+.table_add_form #add-composition .composition_percentage input {
+    width: 50px !important;
+}
+
+.remove-composition {
+    width: 10px !important;
+}
+
+.plus_button {
+    width: 10px !important;
+    display: block !important;
+}
+
+.remove-composition button {
+    width: 25px;
+    height: 25px;
+    border-radius: 20px;
+    color: white;
+    background-color: darkred;
+    margin: auto;
+}
+
+.plus_button button {
+    margin: auto;
+    display: block !important;
+    background-color: green;
+    color: white;
+    border-radius: 20px;
+    width: 25px;
+    height: 25px;
+}
+
+#add-composition {
+    width: 150px !important;
+}
+
+
+#menu-list li:hover {
+    background-color: var(--menu-hover-color);
+    border-left: 3px solid var(--menu-list-border-color);
+}
+
+#menu-list li:hover a {
+
+}
+
+#menu-list .current {
+    background-color: #fad2e1 !important;
+}
+
+#content {
+    background-color: var(--content-background-color);
+    height: 100%;
+    width: 100%;
+}
