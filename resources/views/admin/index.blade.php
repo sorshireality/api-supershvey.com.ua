@@ -13,8 +13,15 @@
 @elseif ($page == "orders")
     <script>
         updateCurrentPageIndicator('orders')
+        showSubMenuList('sub-orders')
     </script>
     @include('admin.orders')
+@elseif ($page == "order-lines")
+    <script>
+        updateCurrentPageIndicator('order-lines')
+        showSubMenuList('sub-orders')
+    </script>
+    @include('admin.order-lines')
 @elseif ($page == "customers")
     <script>
         updateCurrentPageIndicator('customers')

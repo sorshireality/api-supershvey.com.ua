@@ -25,6 +25,10 @@ Route::prefix('admin')->group(function () {
         return redirect('/admin/content');
     });
     Route::get('orders', [\App\Http\Controllers\PageController::class, 'showOrders']);
+    Route::post('orders', [\App\Http\Controllers\PageController::class, 'addOrders']);
+
+    Route::get('order-lines', [\App\Http\Controllers\PageController::class, 'showOrderLines']);
+    Route::post('order-lines', [\App\Http\Controllers\PageController::class, 'addOrderLines']);
 
     Route::get('customers', [\App\Http\Controllers\PageController::class, 'showCustomers']);
     Route::post('customers', [\App\Http\Controllers\PageController::class, 'addCustomer']);
@@ -39,7 +43,7 @@ Route::prefix('admin')->group(function () {
     Route::post('compositions', [\App\Http\Controllers\PageController::class, 'addCompositions']);
 
     Route::get('attributes-composition', [\App\Http\Controllers\PageController::class, 'showAttributesComposition']);
- //   Route::post('compositions', [\App\Http\Controllers\PageController::class, 'addCompositions']);
+    Route::post('attributes-composition', [\App\Http\Controllers\PageController::class, 'addAttributesComposition']);
 
 
     Route::get('products', [\App\Http\Controllers\PageController::class, 'showProducts']);

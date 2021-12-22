@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\ModelHelperController;
 use App\Models\Address;
 use App\Models\Customers;
 use Illuminate\Http\Request;
@@ -29,7 +30,17 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $status = ModelHelperController::addEntityBasedOnClass(Order::class, $request);
+        if (!$status) {
+            return new Response(
+                'Ошибка добавления заказа',
+                500
+            );
+        }
+        return new Response(
+            'Заказ успешно добавлен',
+            200
+        );
     }
 
     /**
@@ -63,7 +74,6 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        $order_id = file_get_contents('php://input');
         if (Order::destroy($id)) {
             return new Response('Заказ с идентификатором : %s успешно удален', 200);
         } else

@@ -28,6 +28,42 @@ class PageController extends Controller
         ]);
     }
 
+    public function addOrders()
+    {
+        $request = new \Illuminate\Http\Request();
+        $request->request->set('customer_id', $_POST['customer']);
+        $request->request->set('shipping_address_id', $_POST['address']);
+        $response = app('\App\Http\Controllers\OrderController')->store($request);
+        if ($response->getStatusCode() == 200) {
+            return redirect('admin/orders');
+        }
+    }
+
+    public function showOrderLines(): \Illuminate\View\View
+    {
+        $order_lines = app('\App\Http\Controllers\OrderLinesController')->index()->getContent();
+        $products = json_decode(app('\App\Http\Controllers\ProductController')->index()->getContent());
+        $orders = json_decode(app('\App\Http\Controllers\OrderController')->index()->getContent());
+        return view('admin.index', [
+            "page" => "order-lines",
+            "order_lines" => json_decode($order_lines),
+            "products" => $products,
+            "orders" => $orders
+        ]);
+    }
+
+    public function addOrderLines()
+    {
+        $request = new \Illuminate\Http\Request();
+        $request->request->set('order_id', $_POST['order_id']);
+        $request->request->set('product_id', $_POST['product_id']);
+        $request->request->set('quantity', $_POST['quantity']);
+        $response = app('\App\Http\Controllers\OrderLinesController')->store($request);
+        if ($response->getStatusCode() == 200) {
+            return redirect('admin/order-lines');
+        }
+    }
+
     public function showCategories(): \Illuminate\View\View
     {
         $categories = app('\App\Http\Controllers\CategoryController')->index()->getContent();
@@ -78,11 +114,27 @@ class PageController extends Controller
 
     public function showAttributesComposition()
     {
-        $attributes_composition = app('\App\Http\Controllers\AttributeCompositionsController')->index()->getContent();
+        $attributes_composition = json_decode(app('\App\Http\Controllers\AttributeCompositionsController')->index()->getContent());
+        $products = json_decode(app('\App\Http\Controllers\ProductController')->index()->getContent());
+        $materials = json_decode(app('\App\Http\Controllers\CompositionController')->index()->getContent());
         return view('admin.index', [
             "page" => "attributes-composition",
-            "attributes_composition" => json_decode($attributes_composition)
+            "attributes_composition" => $attributes_composition,
+            "products" => $products,
+            "materials" => $materials
         ]);
+    }
+
+    public function addAttributesComposition()
+    {
+        $request = new \Illuminate\Http\Request();
+        $request->request->set('attribute_id', $_POST['product_number']);
+        $request->request->set('material_id', $_POST['meterial_id']);
+        $request->request->set('percentage', (int)$_POST['percentage']);
+        $response = app('\App\Http\Controllers\AttributeCompositionsController')->store($request);
+        if ($response->getStatusCode() == 200) {
+            return redirect('admin/attributes-composition');
+        }
     }
 
     public function showCompositions()

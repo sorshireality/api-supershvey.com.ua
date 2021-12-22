@@ -23,8 +23,8 @@
                 <td>{{$product->description}}</td>
                 <td>{{$product->quantity}}</td>
                 <td>{{$product->title}}</td>
-                <td>{{$product->created_at}}</td>
-                <td>{{$product->updated_at}}</td>
+                <td>{{(new DateTime($product->created_at))->format('Y-m-d [h:i]')}}</td>
+                <td>{{(new DateTime($product->updated_at))->format('Y-m-d [h:i]')}}</td>
                 <td>
                     <button class="delete-btn" onclick="removeSingleEntity('products',{{$product->id}})">x</button>
                 </td>

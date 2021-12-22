@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Raleway:wght@100;200&display=swap');
+
 :root {
     --bodt-background-color: #cddafd;
     --content-background-color: #eae4e9;
@@ -9,6 +11,7 @@
 }
 
 * {
+    font-family: Raleway, sans-serif;
     padding: 0;
     margin: 0;
 }
@@ -85,6 +88,10 @@ CRUD table start
     display: none;
 }
 
+#menu .sub-orders {
+    display: none;
+}
+
 .entity_table_view tbody tr:nth-child(even) {
     background-color: #DDD;
 }
@@ -134,16 +141,40 @@ button:hover {
     transition: 0.2s ease-in;
 }
 
-
-.entity_table_view input {
-    width: 100%;
-    height: 40px;
+div .create-btn{
+    width: 50px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
     border: none;
-    border-bottom: 1px solid #333;
-    padding: 0 5px;
-    font-size: 15px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
+.table_add_form{
+    background-color: white;
+    position: relative;
+}
+
+.table_add_form div{
+    display: inline-block;
+    vertical-align: top;
+    border-right: 1px solid black;
+    margin: 0 10px;
+}
+
+.table_add_form div:last-child{
+    border-right: none;
+}
+
+.table_add_form div input,select {
+    margin-left: 10px;
+}
+
+div .number_input{
+    width: 50px;
+}
 /**
 End CRUD table
  */

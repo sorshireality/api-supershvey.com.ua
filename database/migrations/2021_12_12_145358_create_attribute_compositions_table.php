@@ -14,6 +14,7 @@ class CreateAttributeCompositionsTable extends Migration
     public function up()
     {
         Schema::create('attribute_compositions', function (Blueprint $table) {
+            $table->id()->autoIncrement();
             $table->bigInteger('attribute_id')->nullable()->unsigned();
             $table->bigInteger('material_id')->nullable()->unsigned();
             $table->integer('percentage');

@@ -23,27 +23,33 @@
                 </td>
             </tr>
         @endforeach
-        <tr class="add-form">
-            <td></td>
-            <td>
-                <select id="customer">
-                    @foreach($customers as $customer)
-                        <option value="{{$customer->id}}">{{$customer->name}}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td>
-                <select id="address">
-                    @foreach($address as $single_address)
-                        <option value="{{$single_address->id}}">{{$single_address->district}}</option>
-                    @endforeach
-                </select></td>
-            <td></td>
-            <td></td>
-            <td>
-                <button class="create-btn" onclick="addNewOrder(this)">Add</button>
-            </td>
-        </tr>
+
         </tbody>
+    </table>
+    <table id="add-order" class="table_add_form">
+        <tr class="add-form">
+            <form action="orders" method="POST" id="order_form">
+            @csrf <!-- {{ csrf_field() }} -->
+                <td></td>
+                <td>
+                    <select name="customer" id="customer" form="order_form">
+                        @foreach($customers as $customer)
+                            <option value="{{$customer->id}}">{{$customer->name}}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <select name="address" id="address" form="order_form">
+                        @foreach($address as $single_address)
+                            <option value="{{$single_address->id}}">{{$single_address->district}}</option>
+                        @endforeach
+                    </select></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button class="create-btn" onclick="addNewOrder(this)">Add</button>
+                </td>
+            </form>
+        </tr>
     </table>
 </div>

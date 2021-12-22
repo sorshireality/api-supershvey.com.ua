@@ -4,6 +4,7 @@
     </div>
     <ul id="menu-list">
         <li id="menu-orders" class="border"><a href="orders">Заказы</a></li>
+        <li id="menu-order-lines" class="sub-menu sub-orders" class="border"><a href="order-lines">Линии заказов</a></li>
         <li id="menu-products" class="border"><a href="products">Продукты</a></li>
         <li id="menu-categories" class="sub-menu sub-products"><a href="categories">Категории</a></li>
         <li id="menu-attributes" class="sub-menu sub-products"><a href="attributes">Аттрибуты</a></li>

@@ -15,8 +15,13 @@ class CompositionController extends Controller
      */
     public function index(): Response
     {
+        $response = [];
+        $products = Composition::all();
+        foreach ($products->toArray() as $product => $value) {
+            $response[$value['id']] = $value;
+        }
         return new Response(
-            Composition::all(),
+            $response,
             200
         );
     }
