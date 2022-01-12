@@ -26,30 +26,45 @@
 
         </tbody>
     </table>
-    <table id="add-order" class="table_add_form">
-        <tr class="add-form">
+    <div id="add-order" class="table_add_form">
+        <div class="add-form">
             <form action="orders" method="POST" id="order_form">
             @csrf <!-- {{ csrf_field() }} -->
-                <td></td>
-                <td>
-                    <select name="customer" id="customer" form="order_form">
-                        @foreach($customers as $customer)
-                            <option value="{{$customer->id}}">{{$customer->name}}</option>
-                        @endforeach
+                Строки заказа :
+                <br>
+                <div class="order_line_embedded">
+                    Выберите продукт : <select>
+
                     </select>
-                </td>
-                <td>
-                    <select name="address" id="address" form="order_form">
-                        @foreach($address as $single_address)
-                            <option value="{{$single_address->id}}">{{$single_address->district}}</option>
-                        @endforeach
-                    </select></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <button class="create-btn" onclick="addNewOrder(this)">Add</button>
-                </td>
+                    Укажите количество : <input type="text">
+                </div>
+
+                <div id="order_lines_embedded_to_order"></div>
+
+                Покупатель : <select name="customer" id="customer" form="order_form"
+                                     onchange="handleAddNewOrdersCustomerChanging(event)">
+                    @foreach($customers as $customer)
+                        <option value="{{$customer->id}}">{{$customer->name}}</option>
+                    @endforeach
+                    <option value="">Не добавлять нового</option>
+                    <option id="add_new_customer" value="add_new_customer">Добавить нового</option>
+                </select>
+
+                <div id="customer_embedded_to_order"></div>
+
+                Адресс доставки : <select name="address" id="address" form="order_form"
+                                          onchange="handleAddNewOrdersDeliveryAddressChanging(event)">
+                    @foreach($address as $single_address)
+                        <option value="{{$single_address->id}}">{{$single_address->district}}</option>
+                    @endforeach
+                    <option value="">Не добавлять новый адресс</option>
+                    <option id="add_new_delivery_address" value="add_new_delivery_address">Добавить новый</option>
+                </select>
+
+                <div id="address_embedded_to_order"></div>
+
+                <button class="create-btn" onclick="addNewOrder(this)">Add</button>
             </form>
-        </tr>
-    </table>
+        </div>
+    </div>
 </div>

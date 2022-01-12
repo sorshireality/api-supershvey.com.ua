@@ -4,16 +4,18 @@ namespace App\Http\Components;
 
 class ModelHelperController
 {
-    static function addEntityBasedOnClass($class, $request)
+    /**
+     * @param $class
+     * @param $request
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    static function prepareModel($class, $request): object
     {
         $obj = new $class();
         foreach ($request->request->all() as $key => $value) {
             $obj->$key = $value;
         }
 
-        if (!$obj->save()) {
-            return false;
-        };
         return $obj;
     }
 }

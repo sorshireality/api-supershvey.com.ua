@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\ApiResponse;
+use App\Http\Components\ModelHelperController;
+use App\Http\Components\Status;
+use App\Models\Categorie;
 use App\Models\Products;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -15,15 +20,8 @@ class ProductController extends Controller
      */
     public function index(): Response
     {
-        $response = [];
-        $products = Products::all();
-        foreach ($products->toArray() as $product => $value) {
-            $response[$value['id']] = $value;
-        }
-        return new Response(
-            $response,
-            200
-        );
+        $response = new ApiResponse(Status::OK, Products::all());
+        return $response->getResponse();
     }
 
     /**
@@ -34,22 +32,35 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Products();
-        $product->name = $request->get('title');
-        $product->description = $request->get('desc');
-        $product->quantity = $request->get('quantity');
-        $product->category_id = $request->get('category_id');
-        if ($product->save()) {
-            return new Response(
-                json_encode($product),
-                200
+        try {
+            $entity = ModelHelperController::prepareModel(Products::class, $request);
+            $status = $entity->save();
+
+            if (!$status) {
+                $response = new ApiResponse(
+                    Status::SERVER_ERROR,
+                    'Failed adding customer'
+                );
+                return $response->getResponse();
+            }
+
+            $response = new ApiResponse(
+                Status::CREATED,
+                $entity
             );
-        } else {
-            return new Response(
-                'Ошибка добавления продукта',
-                500
+
+        } catch (QueryException $exception) {
+            $message[] = $exception->getMessage();
+
+            $category = Categorie::find($entity->category_id);
+            if ($category == null) $message[] = 'Не существующая категория';
+
+            $response = new ApiResponse(
+                Status::BAD_REQUEST,
+                $message
             );
         }
+        return $response->getResponse();
     }
 
     /**
@@ -60,7 +71,14 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $entity = Products::find($id);
+
+        $response = match ((bool)$entity) {
+            true => new ApiResponse(Status::OK, $entity),
+            false => new ApiResponse(Status::NOT_FOUND)
+        };
+
+        return $response->getResponse();
     }
 
     /**
@@ -84,8 +102,16 @@ class ProductController extends Controller
     public function destroy(int $id): Response
     {
         if (Products::destroy($id)) {
-            return new Response(sprintf('Продукт с идентификатором : %s успешно удален', $id), 200);
-        } else
-            return new Response(sprintf('Ошибка при удаление продукта с идентификатором %s', $id), 400);
+            $response = new ApiResponse(
+                Status::OK,
+                sprintf('Продукт с идентификатором : %s успешно удален', $id)
+            );
+        } else {
+            $response = new ApiResponse(
+                Status::SERVER_ERROR,
+                sprintf('Ошибка при удаление продукта с идентификатором %s', $id)
+            );
+        }
+        return $response->getResponse();
     }
 }

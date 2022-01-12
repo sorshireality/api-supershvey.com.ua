@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\ApiResponse;
 use App\Http\Components\ModelHelperController;
+use App\Http\Components\Status;
 use App\Models\Composition;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Mockery\Exception;
 
 class CompositionController extends Controller
 {
@@ -15,15 +20,20 @@ class CompositionController extends Controller
      */
     public function index(): Response
     {
-        $response = [];
-        $products = Composition::all();
-        foreach ($products->toArray() as $product => $value) {
-            $response[$value['id']] = $value;
-        }
-        return new Response(
-            $response,
-            200
-        );
+        $response = new ApiResponse(Status::OK, Composition::all());
+        return $response->getResponse();
+    }
+
+    public function show($id): Response
+    {
+        $entity = Composition::find($id);
+
+        $response = match ((bool)$entity) {
+            true => new ApiResponse(Status::OK, $entity),
+            false => new ApiResponse(Status::NOT_FOUND)
+        };
+
+        return $response->getResponse();
     }
 
     /**
@@ -32,19 +42,33 @@ class CompositionController extends Controller
      * @param $request
      * @return \Illuminate\Http\Response
      */
-    public function store($request): Response
+    public function store(Request $request): Response
     {
-        $status = ModelHelperController::addEntityBasedOnClass(Composition::class, $request);
-        if (!$status) {
-            return new Response(
-                'Ошибка добавления категории',
-                500
+        try {
+            $entity = ModelHelperController::prepareModel(Composition::class, $request);
+            $status = $entity->save();
+
+            if (!$status) {
+                $response = new ApiResponse(
+                    Status::SERVER_ERROR,
+                    'Failed adding composition'
+                );
+                return $response->getResponse();
+            }
+
+            $response = new ApiResponse(
+                Status::CREATED,
+                $entity
+            );
+
+        } catch (QueryException $exception) {
+            $response = new ApiResponse(
+                Status::SERVER_ERROR,
+                $exception->getMessage()
             );
         }
-        return new Response(
-            'Категория успешно добавлен',
-            200
-        );
+        return $response->getResponse();
+
     }
 
     /**
@@ -56,9 +80,18 @@ class CompositionController extends Controller
     public function destroy($id): Response
     {
         if (Composition::destroy($id)) {
-            return new Response(sprintf('Материал с идентификатором : %s успешно удален', $id), 200);
-        } else
-            return new Response(sprintf('Ошибка при удаление материала с идентификатором %s', $id), 400);
-
+            $response = new ApiResponse(
+                Status::OK,
+                sprintf('Материал с идентификатором : %s успешно удален', $id)
+            );
+        } else {
+            $response = new ApiResponse(
+                Status::SERVER_ERROR,
+                sprintf('Ошибка при удаление материала с идентификатором %s', $id)
+            );
+        }
+        return $response->getResponse();
     }
+
+
 }

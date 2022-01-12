@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\ApiResponse;
 use App\Http\Components\ModelHelperController;
+use App\Http\Components\Status;
 use App\Models\Address;
 use App\Models\Customers;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Http\Response;
@@ -13,13 +16,12 @@ class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return \Illuminate\Http\Response
+     *
      */
     public function index(): Response
     {
-        return new Response(
-            Order::all(),
-            200);
+        $response = new ApiResponse(Status::OK, Order::all());
+        return $response->getResponse();
     }
 
     /**
@@ -30,17 +32,38 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $status = ModelHelperController::addEntityBasedOnClass(Order::class, $request);
-        if (!$status) {
-            return new Response(
-                'Ошибка добавления заказа',
-                500
+        try {
+            $entity = ModelHelperController::prepareModel(Order::class, $request);
+            $status = $entity->save();
+
+            if (!$status) {
+                $response = new ApiResponse(
+                    Status::SERVER_ERROR,
+                    'Ошибка добавления заказа'
+                );
+                return $response->getResponse();
+            }
+
+            $response = new ApiResponse(
+                Status::CREATED,
+                $entity
+            );
+
+        } catch (QueryException $exception) {
+            $message[] = $exception->getMessage();
+
+            $customer = Customers::find($entity->customer_id);
+            if ($customer == null) $message[] = 'Не существующий покупатель';
+
+            $address = Address::find($entity->shipping_address_id);
+            if ($address == null) $message[] = 'Не существующий аддресс доставки';
+
+            $response = new ApiResponse(
+                Status::BAD_REQUEST,
+                $message
             );
         }
-        return new Response(
-            'Заказ успешно добавлен',
-            200
-        );
+        return $response->getResponse();
     }
 
     /**
@@ -51,7 +74,14 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        $entity = Order::find($id);
+
+        $response = match ((bool)$entity) {
+            true => new ApiResponse(Status::OK, $entity),
+            false => new ApiResponse(Status::NOT_FOUND)
+        };
+
+        return $response->getResponse();
     }
 
     /**
@@ -75,8 +105,16 @@ class OrderController extends Controller
     public function destroy($id)
     {
         if (Order::destroy($id)) {
-            return new Response('Заказ с идентификатором : %s успешно удален', 200);
-        } else
-            return new Response('Ошибка при удаление заказа с идентификатором %s', 400);
+            $response = new ApiResponse(
+                Status::OK,
+                sprintf('Заказ с идентификатором : %s успешно удален', $id)
+            );
+        } else {
+            $response = new ApiResponse(
+                Status::SERVER_ERROR,
+                sprintf('Ошибка при удаление заказа с идентификатором %s', $id)
+            );
+        }
+        return $response->getResponse();
     }
 }

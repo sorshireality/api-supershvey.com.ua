@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Raleway:wght@100;200&display=swap');
+@font-face {
+    font-family: ZXSpectrum;
+    src: url('/v1/public/fonts/ZX_Spectrum-7/zxspectrum_7.ttf');
+}
 
 :root {
     --bodt-background-color: #cddafd;
@@ -11,7 +14,6 @@
 }
 
 * {
-    font-family: Raleway, sans-serif;
     padding: 0;
     margin: 0;
 }
@@ -41,6 +43,11 @@ body {
     display: none;
 }
 
+#menu {
+    font-family: ZXSpectrum, sans-serif;
+    font-size: 23px;
+}
+
 #menu li {
     text-decoration: none;
     list-style: none;
@@ -63,6 +70,14 @@ body {
 /**
 CRUD table start
  */
+#address_embedded_to_order #house_number, #apartment_number {
+    width: 30px;
+}
+
+#address_embedded_to_order #postcode, #ukrp_department, #np_department {
+    width: 50px;
+}
+
 #crud-message .slide {
     display: block;
     transition: step-start 1s;
@@ -141,7 +156,7 @@ button:hover {
     transition: 0.2s ease-in;
 }
 
-div .create-btn{
+div .create-btn {
     width: 50px;
     position: absolute;
     right: 0;
@@ -152,29 +167,30 @@ div .create-btn{
     border-top-right-radius: 10px;
 }
 
-.table_add_form{
+.table_add_form {
     background-color: white;
     position: relative;
 }
 
-.table_add_form div{
-    display: inline-block;
+.table_add_form div {
+    display: block;
     vertical-align: top;
     border-right: 1px solid black;
     margin: 0 10px;
 }
 
-.table_add_form div:last-child{
+.table_add_form div:last-child {
     border-right: none;
 }
 
-.table_add_form div input,select {
+.table_add_form div input, select {
     margin-left: 10px;
 }
 
-div .number_input{
+div .number_input {
     width: 50px;
 }
+
 /**
 End CRUD table
  */
@@ -215,20 +231,19 @@ End CRUD table
 #add-composition {
     border: 1px solid black;
     border-radius: 20px;
-    text-align: center !important;
 }
 
 .table_add_form #add-composition .composition_percentage input {
-    width: 50px !important;
+    width: 50px;
 }
 
 .remove-composition {
-    width: 10px !important;
+    width: 10px;
 }
 
 .plus_button {
-    width: 10px !important;
-    display: block !important;
+    width: 10px ;
+    display: block;
 }
 
 .remove-composition button {
@@ -242,7 +257,6 @@ End CRUD table
 
 .plus_button button {
     margin: auto;
-    display: block !important;
     background-color: green;
     color: white;
     border-radius: 20px;
@@ -251,7 +265,7 @@ End CRUD table
 }
 
 #add-composition {
-    width: 150px !important;
+    width: 150px;
 }
 
 

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\ApiResponse;
 use App\Http\Components\ModelHelperController;
+use App\Http\Components\Status;
 use App\Models\Attributes;
 use App\Models\Categorie;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mockery\Exception;
@@ -18,10 +21,8 @@ class AttributesController extends Controller
      */
     public function index()
     {
-        return new Response(
-            Attributes::all(),
-            200
-        );
+        $response = new ApiResponse(Status::OK, Attributes::all());
+        return $response->getResponse();
     }
 
     /**
@@ -43,23 +44,32 @@ class AttributesController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->request->set('timestamps', false);
-            $status = ModelHelperController::addEntityBasedOnClass(Attributes::class, $request);
+            $entity = ModelHelperController::prepareModel(Attributes::class, $request);
+            $entity->timestamps = false;
+            $status = $entity->save();
 
             if (!$status) {
-                throw new Exception('Ошибка добавления атрибута для продукта', 500);
+                $response = new ApiResponse(
+                    Status::SERVER_ERROR,
+                    'Ошибка добавления аттрибута'
+                );
+                return $response->getResponse();
             }
 
-            return new Response(
-                json_encode($status),
-                200
+            $response = new ApiResponse(
+                Status::CREATED,
+                $entity
             );
-        } catch (Exception $exception) {
-            return new Response(
-                $exception->getMessage(),
-                $exception->getCode()
+
+        } catch (QueryException $exception) {
+            $message[] = $exception->getMessage();
+
+            $response = new ApiResponse(
+                Status::BAD_REQUEST,
+                $message
             );
         }
+        return $response->getResponse();
     }
 
     /**
@@ -68,9 +78,16 @@ class AttributesController extends Controller
      * @param \App\Models\Attributes $attributes
      * @return \Illuminate\Http\Response
      */
-    public function show(Attributes $attributes)
+    public function show($id)
     {
-        //
+        $entity = Attributes::find($id);
+
+        $response = match ((bool)$entity) {
+            true => new ApiResponse(Status::OK, $entity),
+            false => new ApiResponse(Status::NOT_FOUND)
+        };
+
+        return $response->getResponse();
     }
 
     /**
@@ -99,16 +116,22 @@ class AttributesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $product_id
+     * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(string $product_id)
+    public function destroy($id)
     {
-        $attribute = Attributes::where('product_id', $product_id)->firstOrFail();
-        if ($attribute->delete()) {
-            return new Response(sprintf('Аттрибуты для продукта с идентификатором : %s успешно удалены', $product_id), 200);
-        } else
-            return new Response(sprintf('Ошибка при удаление аттрибуты для продукта с идентификатором %s', $product_id), 400);
-
+        if (Attributes::destroy($id)) {
+            $response = new ApiResponse(
+                Status::OK,
+                sprintf('Аттрибут с идентификатором : %s успешно удален', $id)
+            );
+        } else {
+            $response = new ApiResponse(
+                Status::SERVER_ERROR,
+                sprintf('Ошибка при удаление аттрибута с идентификатором %s', $id)
+            );
+        }
+        return $response->getResponse();
     }
 }

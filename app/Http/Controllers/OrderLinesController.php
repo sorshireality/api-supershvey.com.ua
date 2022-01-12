@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\ApiResponse;
 use App\Http\Components\ModelHelperController;
+use App\Http\Components\Status;
+use App\Models\Order;
 use App\Models\OrderLines;
+use App\Models\Products;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -11,31 +16,72 @@ class OrderLinesController extends Controller
 {
     public function index()
     {
-        return new Response(
-            OrderLines::all(),
-            200);
+
+        $response = new ApiResponse(Status::OK, OrderLines::all());
+        return $response->getResponse();
     }
 
-    public function store($request): Response
+    public function show($id)
     {
-        $status = ModelHelperController::addEntityBasedOnClass(OrderLines::class, $request);
-        if (!$status) {
-            return new Response(
-                'Ошибка добавления заказа',
-                500
+        $entity = OrderLines::find($id);
+
+        $response = match ((bool)$entity) {
+            true => new ApiResponse(Status::OK, $entity),
+            false => new ApiResponse(Status::NOT_FOUND)
+        };
+
+        return $response->getResponse();
+    }
+
+    public function store(Request $request): Response
+    {
+        try {
+            $entity = ModelHelperController::prepareModel(OrderLines::class, $request);
+            $status = $entity->save();
+
+            if (!$status) {
+                $response = new ApiResponse(
+                    Status::SERVER_ERROR,
+                    'Ошибка добавления линии заказа'
+                );
+                return $response->getResponse();
+            }
+
+            $response = new ApiResponse(
+                Status::CREATED,
+                $entity
+            );
+
+        } catch (QueryException $exception) {
+            $message[] = $exception->getMessage();
+
+            $order = Order::find($entity->order_id);
+            if ($order == null) $message[] = 'Не существующий заказ';
+
+            $product = Products::find($entity->product_id);
+            if ($product == null) $message[] = 'Не существующий продукт';
+
+            $response = new ApiResponse(
+                Status::BAD_REQUEST,
+                $message
             );
         }
-        return new Response(
-            'Заказ успешно добавлен',
-            200
-        );
+        return $response->getResponse();
     }
 
     public function destroy(string $id): Response
     {
         if (OrderLines::destroy($id)) {
-            return new Response(sprintf('Строка заказа с идентификатором : %s успешно удалена', $id), 200);
-        } else
-            return new Response(sprintf('Ошибка при удаление строки заказа с идентификатором %s', $id), 400);
+            $response = new ApiResponse(
+                Status::OK,
+                sprintf('Линия заказа с идентификатором : %s успешно удален', $id)
+            );
+        } else {
+            $response = new ApiResponse(
+                Status::SERVER_ERROR,
+                sprintf('Ошибка при удаление линии заказа с идентификатором %s', $id)
+            );
+        }
+        return $response->getResponse();
     }
 }

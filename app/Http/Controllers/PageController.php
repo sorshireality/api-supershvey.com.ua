@@ -22,9 +22,9 @@ class PageController extends Controller
         $address = app('\App\Http\Controllers\AddressController')->index()->getContent();
         return view('admin.index', [
             "page" => "orders",
-            "orders" => json_decode($orders),
-            "customers" => json_decode($customers),
-            "address" => json_decode($address)
+            "orders" => json_decode($orders)->data,
+            "customers" => json_decode($customers)->data,
+            "address" => json_decode($address)->data
         ]);
     }
 
@@ -69,7 +69,7 @@ class PageController extends Controller
         $categories = app('\App\Http\Controllers\CategoryController')->index()->getContent();
         return view('admin.index', [
             "page" => "categories",
-            "categories" => json_decode($categories)
+            "categories" => json_decode($categories)->data
         ]);
     }
 
@@ -78,15 +78,16 @@ class PageController extends Controller
         $request = new \Illuminate\Http\Request();
         $request->request->set('title', $_POST['title']);
         $response = app('\App\Http\Controllers\CategoryController')->store($request);
-        if ($response->getStatusCode() == 200) {
+        if ($response->getStatusCode() == 201) {
             return redirect('admin/categories');
         }
     }
 
     public function showAttributes(): \Illuminate\View\View
     {
-        $attributes = json_decode(app('\App\Http\Controllers\AttributesController')->index()->getContent());
-        $products = json_decode(app('\App\Http\Controllers\ProductController')->index()->getContent());
+        $attributes = json_decode(app('\App\Http\Controllers\AttributesController')->index()->getContent())->data;
+        $products = json_decode(app('\App\Http\Controllers\ProductController')->index()->getContent())->data;
+
         foreach ($attributes as $attribute => $key) {
             //dd($key->product_id);
             unset($products->{$key->product_id});
@@ -107,7 +108,7 @@ class PageController extends Controller
         $request->request->set('price', (int)$_POST['price']);
         $request->request->set('image', $_POST['photo']);
         $response = app('\App\Http\Controllers\AttributesController')->store($request);
-        if ($response->getStatusCode() == 200) {
+        if ($response->getStatusCode() == 201) {
             return redirect('admin/attributes');
         }
     }
@@ -119,9 +120,9 @@ class PageController extends Controller
         $materials = json_decode(app('\App\Http\Controllers\CompositionController')->index()->getContent());
         return view('admin.index', [
             "page" => "attributes-composition",
-            "attributes_composition" => $attributes_composition,
-            "products" => $products,
-            "materials" => $materials
+            "attributes_composition" => $attributes_composition->data,
+            "products" => $products->data,
+            "materials" => $materials->data
         ]);
     }
 
@@ -132,7 +133,7 @@ class PageController extends Controller
         $request->request->set('material_id', $_POST['meterial_id']);
         $request->request->set('percentage', (int)$_POST['percentage']);
         $response = app('\App\Http\Controllers\AttributeCompositionsController')->store($request);
-        if ($response->getStatusCode() == 200) {
+        if ($response->getStatusCode() == 201) {
             return redirect('admin/attributes-composition');
         }
     }
@@ -142,7 +143,7 @@ class PageController extends Controller
         $compositions = app('\App\Http\Controllers\CompositionController')->index()->getContent();
         return view('admin.index', [
             "page" => "compositions",
-            "compositions" => json_decode($compositions)
+            "compositions" => json_decode($compositions)->data
         ]);
     }
 
@@ -151,7 +152,7 @@ class PageController extends Controller
         $request = new \Illuminate\Http\Request();
         $request->request->set('material', $_POST['material']);
         $response = app('\App\Http\Controllers\CompositionController')->store($request);
-        if ($response->getStatusCode() == 200) {
+        if ($response->getStatusCode() == 201) {
             return redirect('admin/compositions');
         }
     }
@@ -167,8 +168,8 @@ class PageController extends Controller
         return view('admin.index', [
             "page" => "products",
             "products" => json_decode($products),
-            "categories_list" => json_decode($categories),
-            "compositions" => json_decode($compositions)
+            "categories_list" => json_decode($categories)->data,
+            "compositions" => json_decode($compositions)->data
         ]);
     }
 
@@ -184,7 +185,7 @@ class PageController extends Controller
         $request->request->set('category_id', $_POST['category_id']);
         $response = app('\App\Http\Controllers\ProductController')->store($request);
 
-        if ($response->getStatusCode() != 200) {
+        if ($response->getStatusCode() != 201) {
             return redirect('admin/products');
         }
 
@@ -197,7 +198,7 @@ class PageController extends Controller
         $request->request->set('product_id', $product_id);
         $response = app('\App\Http\Controllers\AttributesController')->store($request);
 
-        if ($response->getStatusCode() != 200) {
+        if ($response->getStatusCode() != 201) {
             return redirect('admin/products');
         }
 
@@ -223,7 +224,7 @@ class PageController extends Controller
         $addresses = app('\App\Http\Controllers\AddressController')->index()->getContent();
         return view('admin.index', [
             "page" => "addresses",
-            "addresses" => json_decode($addresses),
+            "addresses" => json_decode($addresses)->data,
         ]);
     }
 
@@ -239,7 +240,7 @@ class PageController extends Controller
         $request->request->set('np_department', $_POST['np_department']);
         $request->request->set('ukrp_department', $_POST['ukrp_department']);
         $response = app('\App\Http\Controllers\AddressController')->store($request);
-        if ($response->getStatusCode() == 200) {
+        if ($response->getStatusCode() == 201) {
             return redirect('admin/addresses');
         }
     }
@@ -250,8 +251,8 @@ class PageController extends Controller
         $address = app('\App\Http\Controllers\AddressController')->index()->getContent();
         return view('admin.index', [
             "page" => "customers",
-            "customers" => json_decode($customers),
-            "billing_addresses" => json_decode($address)
+            "customers" => json_decode($customers)->data,
+            "billing_addresses" => json_decode($address)->data
         ]);
     }
 
@@ -264,7 +265,7 @@ class PageController extends Controller
         $request->request->set('email', $_POST['email']);
         $request->request->set('billing_address_id', $_POST['billing_address_id']);
         $response = app('\App\Http\Controllers\CustomerController')->store($request);
-        if ($response->getStatusCode() == 200) {
+        if ($response->getStatusCode() == 201) {
             return redirect('admin/customers');
         }
     }

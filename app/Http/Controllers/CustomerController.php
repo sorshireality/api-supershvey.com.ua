@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\ApiResponse;
+use App\Http\Components\ModelHelperController;
+use App\Http\Components\Status;
+use App\Models\Address;
+use App\Models\Composition;
 use App\Models\Customers;
-use App\Models\Order;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -15,9 +20,8 @@ class CustomerController extends Controller
      */
     public function index(): Response
     {
-        return new Response(
-            \App\Models\Customers::all(),
-            200);
+        $response = new ApiResponse(Status::OK, Customers::all());
+        return $response->getResponse();
     }
 
     /**
@@ -28,23 +32,35 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $customer = new Customers();
-        $customer->name = $request->get('name');
-        $customer->lastname = $request->get('lastname');
-        $customer->phone = $request->get('phone');
-        $customer->email = $request->get('email');
-        $customer->billing_address_id = $request->get('billing_address_id');
-        if ($customer->save()) {
-            return new Response(
-                'Покупатель успешно добавлен',
-                200
+        try {
+            $entity = ModelHelperController::prepareModel(Customers::class, $request);
+            $status = $entity->save();
+
+            if (!$status) {
+                $response = new ApiResponse(
+                    Status::SERVER_ERROR,
+                    'Failed adding customer'
+                );
+                return $response->getResponse();
+            }
+
+            $response = new ApiResponse(
+                Status::CREATED,
+                $entity
             );
-        } else {
-            return new Response(
-                'Ошибка добавления покупателя',
-                500
+
+        } catch (QueryException $exception) {
+            $message[] = $exception->getMessage();
+
+            $address = Address::find($entity->billing_address_id);
+            if ($address == null) $message[] = 'Не существующий адресс';
+
+            $response = new ApiResponse(
+                Status::BAD_REQUEST,
+                $message
             );
         }
+        return $response->getResponse();
     }
 
     /**
@@ -55,7 +71,14 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        //
+        $entity = Customers::find($id);
+
+        $response = match ((bool)$entity) {
+            true => new ApiResponse(Status::OK, $entity),
+            false => new ApiResponse(Status::NOT_FOUND)
+        };
+
+        return $response->getResponse();
     }
 
     /**
@@ -78,9 +101,17 @@ class CustomerController extends Controller
      */
     public function destroy(int $id): Response
     {
-        if (\App\Models\Customers::destroy($id)) {
-            return new Response(sprintf('Покупатель с идентификатором : %s успешно удален', $id), 200);
-        } else
-            return new Response(sprintf('Ошибка при удаление покупателя с идентификатором %s', $id), 400);
+        if (Customers::destroy($id)) {
+            $response = new ApiResponse(
+                Status::OK,
+                sprintf('Покупатель с идентификатором : %s успешно удален', $id)
+            );
+        } else {
+            $response = new ApiResponse(
+                Status::SERVER_ERROR,
+                sprintf('Ошибка при удаление покупателя с идентификатором %s', $id)
+            );
+        }
+        return $response->getResponse();
     }
 }

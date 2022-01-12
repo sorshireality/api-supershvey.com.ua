@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\ApiResponse;
 use App\Http\Components\ModelHelperController;
+use App\Http\Components\Status;
 use App\Models\Categorie;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -16,10 +19,8 @@ class CategoryController extends Controller
      */
     public function index(): Response
     {
-        return new Response(
-            Categorie::all(),
-            200
-        );
+        $response = new ApiResponse(Status::OK, Categorie::all());
+        return $response->getResponse();
     }
 
     /**
@@ -30,18 +31,32 @@ class CategoryController extends Controller
      */
     public function store(Request $request): Response
     {
+        try {
+            $entity = ModelHelperController::prepareModel(Categorie::class, $request);
+            $status = $entity->save();
 
-        $status = ModelHelperController::addEntityBasedOnClass(Categorie::class, $request);
-        if (!$status) {
-            return new Response(
-                'Ошибка добавления категории',
-                500
+            if (!$status) {
+                $response = new ApiResponse(
+                    Status::SERVER_ERROR,
+                    'Failed adding customer'
+                );
+                return $response->getResponse();
+            }
+
+            $response = new ApiResponse(
+                Status::CREATED,
+                $entity
+            );
+
+        } catch (QueryException $exception) {
+            $message[] = $exception->getMessage();
+
+            $response = new ApiResponse(
+                Status::BAD_REQUEST,
+                $message
             );
         }
-        return new Response(
-            'Категория успешно добавлен',
-            200
-        );
+        return $response->getResponse();
     }
 
     /**
@@ -52,9 +67,14 @@ class CategoryController extends Controller
      */
     public function show(int $id): Response
     {
-        return new Response(
-            Categorie::find($id)->get(),
-            200);
+        $entity = Categorie::find($id);
+
+        $response = match ((bool)$entity) {
+            true => new ApiResponse(Status::OK, $entity),
+            false => new ApiResponse(Status::NOT_FOUND)
+        };
+
+        return $response->getResponse();
     }
 
     /**

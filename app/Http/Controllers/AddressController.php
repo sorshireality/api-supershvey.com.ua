@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\ApiResponse;
 use App\Http\Components\ModelHelperController;
+use App\Http\Components\Status;
 use App\Models\Address;
+use App\Models\Composition;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use function React\Promise\all;
@@ -17,10 +21,8 @@ class AddressController extends Controller
      */
     public function index(): \Illuminate\Http\Response
     {
-        return new Response(
-            \App\Models\Address::all(),
-            200
-        );
+        $response = new ApiResponse(Status::OK, Address::all());
+        return $response->getResponse();
     }
 
     /**
@@ -31,17 +33,30 @@ class AddressController extends Controller
      */
     public function store(Request $request)
     {
-        $status = ModelHelperController::addEntityBasedOnClass(\App\Models\Address::class, $request);
-        if (!$status) {
-            return new Response(
-                'Ошибка добавления покупателя',
-                500
+        try {
+            $entity = ModelHelperController::prepareModel(Address::class, $request);
+            $status = $entity->save();
+
+            if (!$status) {
+                $response = new ApiResponse(
+                    Status::SERVER_ERROR,
+                    'Failed adding address'
+                );
+                return $response->getResponse();
+            }
+
+            $response = new ApiResponse(
+                Status::CREATED,
+                $entity
+            );
+
+        } catch (QueryException $exception) {
+            $response = new ApiResponse(
+                Status::SERVER_ERROR,
+                $exception->getMessage()
             );
         }
-        return new Response(
-            'Покупатель успешно добавлен',
-            200
-        );
+        return $response->getResponse();
     }
 
     /**
@@ -52,7 +67,14 @@ class AddressController extends Controller
      */
     public function show($id)
     {
-        //
+        $entity = Address::find($id);
+
+        $response = match ((bool)$entity) {
+            true => new ApiResponse(Status::OK, $entity),
+            false => new ApiResponse(Status::NOT_FOUND)
+        };
+
+        return $response->getResponse();
     }
 
     /**
@@ -76,9 +98,16 @@ class AddressController extends Controller
     public function destroy($id)
     {
         if (Address::destroy($id)) {
-            return new Response(sprintf('Адресс с идентификатором : %s успешно удален', $id), 200);
-        } else
-            return new Response(sprintf('Ошибка при удаление адресса с идентификатором %s', $id), 400);
-
+            $response = new ApiResponse(
+                Status::OK,
+                sprintf('Адресс с идентификатором : %s успешно удален', $id)
+            );
+        } else {
+            $response = new ApiResponse(
+                Status::SERVER_ERROR,
+                sprintf('Ошибка при удаление адресса с идентификатором %s', $id)
+            );
+        }
+        return $response->getResponse();
     }
 }

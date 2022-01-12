@@ -33,75 +33,68 @@
         </tbody>
     </table>
 
-    <table id="add-product" class="table_add_form">
-        <tr class="add-form">
+    <div id="add-product" class="table_add_form">
+        <div class="add-form">
             <form action="products" method="POST" id="product_form">
             @csrf <!-- {{ csrf_field() }} -->
-                <td colspan="8">
-                    <table>
-                        <tr>
-                            <td colspan="5">Общая информация</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="text" placeholder="Шапка" id="title" name="title">
-                                Название
-                            </td>
-                            <td>
-                                <input type="text" placeholder="Шапка с рожками" id="desc" name="desc">
-                                Описание
-                            </td>
-                            <td>
-                                <input type="text" placeholder="900" id="quantity" name="quantity">
-                                Количество
-                            </td>
-                            <td>
-                                <select form="product_form" name="category_id">
-                                    @foreach($categories_list as $category)
-                                        <option value="{{$category->id}}">{{$category->title}}</option>
-                                    @endforeach
-                                </select>
-                                Категория
-                            </td>
-                            <td>
-                                <input type="submit" class="create-btn" value="Add">
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td colspan="5">Атрибуты продукта</td>
-                        </tr>
 
-                        <tr class="add-form">
-                            <td>
+                <div>
+                    <h4>Общая информация</h4>
+                    <div>
+                        <label for="title">Название</label><input style="width: 250px" type="text" placeholder="Шапка"
+                                                                  id="title" name="title"><br>
+                    </div>
 
-                                <input type="text" placeholder="Виолент" id="color" name="color">
-                                Цвет
-                            </td>
-                            <td>
-                                <input type="text" placeholder="666" id="price" name="price">
-                                Цена
-                            </td>
-                            <td>
-                                <input type="text" placeholder="в разработке" id="photo" name="photo">
-                                Фото
-                            </td>
-                        </tr>
+                    <div style="display: flex">
+                        <label style="margin-right: 10px" for="desc">Описание</label>
+                        <textarea form="product_form" style="resize: none" placeholder="Шапка с рожками" id="desc"
+                                  rows="10" cols="50"
+                                  name="desc"></textarea>
+                    </div>
 
-                        <tr>
-                            <td colspan="5">Состав продукта</td>
-                        </tr>
+                    <div>
+                        <label for="quantity">Количество</label>
+                        <input type="text" placeholder="900" id="quantity" name="quantity">
 
-                        <tr>
-                            <table id="add-composition">
-                                <input type="text" hidden name="composition_number" id="composition_number">
+                        <label for="category_id">Категория</label>
+                        <select form="product_form" name="category_id">
+                            @foreach($categories_list as $category)
+                                <option value="{{$category->id}}">{{$category->title}}</option>
+                            @endforeach
+                        </select>
 
-                            </table>
-                        </tr>
+                    </div>
 
-                    </table>
-                </td>
+                    <input type="submit" class="create-btn" value="Add">
+                </div>
+                <div>
+                    <h4>Атрибуты продукта</h4>
+
+                    <div class="add-form">
+                        <label for="color">Цвет</label>
+                        <input type="text" placeholder="Виолент" id="color" name="color">
+
+                        <label for="price">Цена</label>
+                        <input type="text" placeholder="666" id="price" name="price">
+
+
+                    </div>
+                    <div>
+                        <label for="photo">Фото</label>
+                        <input type="text" placeholder="в разработке" id="photo" name="photo">
+                    </div>
+                </div>
+                <div>
+                    <h4>Состав продукта</h4>
+
+                    <div id="add-composition" style="display: flex">
+                        <input type="text" hidden name="composition_number" id="composition_number">
+
+                    </div>
+                </div>
+
             </form>
-        </tr>
-    </table>
+        </div>
+    </div>
 </div>
