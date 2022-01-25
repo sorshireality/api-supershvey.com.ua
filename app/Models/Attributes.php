@@ -9,5 +9,6 @@ class Attributes extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected string $primaryKey = 'product_id';
 }

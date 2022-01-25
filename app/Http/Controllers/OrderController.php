@@ -7,10 +7,12 @@ use App\Http\Components\ModelHelperController;
 use App\Http\Components\Status;
 use App\Models\Address;
 use App\Models\Customers;
+use App\Models\OrderLines;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Http\Response;
+use phpDocumentor\Reflection\Types\Object_;
 
 class OrderController extends Controller
 {
@@ -22,6 +24,26 @@ class OrderController extends Controller
     {
         $response = new ApiResponse(Status::OK, Order::all());
         return $response->getResponse();
+    }
+
+    public function _list()
+    {
+        $orders = Order::all();
+        $response = [];
+        foreach ($orders as $order) {
+            $current_info = new \stdClass();
+            $customer_info = Customers::find($order->customer_id);
+            $current_info->customer = $customer_info;
+
+            $order_lines = OrderLines::where('order_id', $order->id);
+
+            foreach ($order_lines as $line) {
+                dd($line);
+            }
+
+            $response [] = $customer_info;
+        }
+        dd($response);
     }
 
     /**
@@ -74,13 +96,19 @@ class OrderController extends Controller
      */
     public function show($id)
     {
+        /** @var Order|bool $entity */
         $entity = Order::find($id);
+        if ((bool)$entity) new ApiResponse(Status::NOT_FOUND);
 
-        $response = match ((bool)$entity) {
-            true => new ApiResponse(Status::OK, $entity),
-            false => new ApiResponse(Status::NOT_FOUND)
-        };
+        $customer = json_decode(app('\App\Http\Controllers\CustomerController')->show($entity->customer_id)->getContent())->data;
+        $address = json_decode(app('\App\Http\Controllers\AddressController')->show($entity->shipping_address_id)->getContent())->data;
 
+        $entity->customer = $customer;
+        unset($entity->customer_id);
+        $entity->address = $address;
+        unset($entity->shipping_address_id);
+
+        $response = new ApiResponse(Status::OK, $entity);
         return $response->getResponse();
     }
 

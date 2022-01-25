@@ -1,7 +1,4 @@
-@font-face {
-    font-family: ZXSpectrum;
-    src: url('/v1/public/fonts/ZX_Spectrum-7/zxspectrum_7.ttf');
-}
+
 
 :root {
     --bodt-background-color: #cddafd;

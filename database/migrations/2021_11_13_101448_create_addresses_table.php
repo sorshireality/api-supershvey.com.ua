@@ -21,8 +21,8 @@ class CreateAddressesTable extends Migration
             $table->string('street');
             $table->string('house_number');
             $table->string('apartment_number');
-            $table->string('np_department');
-            $table->string('ukrp_department');
+            $table->string('np_department')->nullable();
+            $table->string('ukrp_department')->nullable();
             $table->timestamps();
         });
     }

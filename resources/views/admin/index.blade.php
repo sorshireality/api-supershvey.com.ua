@@ -3,66 +3,13 @@
     <title>
         Админ панель
     </title>
-    <script src="{{ asset('js/std.js') }}" type="text/javascript"></script>
-    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <meta id="csrf_token" name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
-@include('admin.menu')
-@if ($page == "content")
-    @include('admin.content')
-@elseif ($page == "orders")
-    <script>
-        updateCurrentPageIndicator('orders')
-        showSubMenuList('sub-orders')
-    </script>
-    @include('admin.orders')
-@elseif ($page == "order-lines")
-    <script>
-        updateCurrentPageIndicator('order-lines')
-        showSubMenuList('sub-orders')
-    </script>
-    @include('admin.order-lines')
-@elseif ($page == "customers")
-    <script>
-        updateCurrentPageIndicator('customers')
-    </script>
-    @include('admin.customers')
-@elseif ($page == "products")
-    <script>
-        updateCurrentPageIndicator("products")
-        showSubMenuList('sub-products')
-    </script>
-    @include('admin.products')
-@elseif ($page == "categories")
-    <script>
-        updateCurrentPageIndicator('categories')
-        showSubMenuList('sub-products')
-    </script>
-    @include('admin.categories')
-@elseif ($page == "attributes")
-    <script>
-        updateCurrentPageIndicator('attributes')
-        showSubMenuList('sub-products')
-    </script>
-    @include('admin.attributes')
-@elseif ($page == "compositions")
-    <script>
-        updateCurrentPageIndicator('compositions')
-        showSubMenuList('sub-products')
-    </script>
-    @include('admin.compositions')
-@elseif ($page == "addresses")
-    <script>
-        updateCurrentPageIndicator('addresses')
-    </script>
-    @include('admin.addresses')
-@elseif ($page == "attributes-composition")
-    <script>
-        updateCurrentPageIndicator('attributes-composition')
-        showSubMenuList('sub-products')
-    </script>
-    @include('admin.attributes-composition')
+<div id="root"></div>
 
-@endif
+<script src="{{ asset('js/std.js', '')}}"></script>
+<script src="{{ asset('js/app.js', '')}}"></script>
 </body>
 </html>

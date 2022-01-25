@@ -16,8 +16,17 @@ class OrderLinesController extends Controller
 {
     public function index()
     {
-
+        if (isset($_GET['order_id'])) {
+            return $this->showByOrderId($_GET['order_id']);
+        }
         $response = new ApiResponse(Status::OK, OrderLines::all());
+        return $response->getResponse();
+    }
+
+    public function showByOrderId($id)
+    {
+        $entity = OrderLines::where('order_id', $id)->get();
+        $response = new ApiResponse(Status::OK, $entity);
         return $response->getResponse();
     }
 
