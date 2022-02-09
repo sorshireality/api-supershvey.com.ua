@@ -12,14 +12,19 @@ class SingleOrderLine extends Component {
         }
         const information = this.props.content
         return (
+
             <tr key={information.id}>
-                <th scope="row"> {information.id}
+
+                <th scope="row">
+                    <Link to={'/v1/public/admin/orders/' + information.id}>{information.id}   </Link>
+
                 </th>
                 <td>{information.customer.name + " " + information.customer.lastname}</td>
                 <td>{"город: " + information.address.city + " " + information.address.district + ", улица: " + information.address.street + " " + information.address.house_number + ", квартира: " + information.address.apartment_number}</td>
                 <td style={{float: "left"}}>{information.amount / 100}</td>
                 <td>{STATUS_MAP[information.status]}</td>
             </tr>
+
 
         )
     }

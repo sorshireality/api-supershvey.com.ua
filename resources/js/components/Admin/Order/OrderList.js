@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import SingleOrderLine from "./SingleOrderLine";
 
 class OrderList extends Component {
     state = {
@@ -50,14 +51,7 @@ class OrderList extends Component {
         if (this.state.order_list) {
             crab = this.state.order_list.map(value => {
                 return (
-                    <tr key={value.id}>
-                        <th scope="row"> {value.id}
-                        </th>
-                        <td>{value.customer.name + " " + value.customer.lastname}</td>
-                        <td>{"город: " + value.address.city + " " + value.address.district + ", улица: " + value.address.street + " " + value.address.house_number + ", квартира: " + value.address.apartment_number}</td>
-                        <td style={{float: "left"}}>{value.amount / 100}</td>
-                        <td>{STATUS_MAP[value.status]}</td>
-                    </tr>
+                    <SingleOrderLine key={value.id} content={value}/>
                 )
             })
         }
@@ -75,6 +69,7 @@ class OrderList extends Component {
                 <tbody>
                 {crab ?? placeholder()}
                 </tbody>
+                Количество заказов : {this.state.order_list.length}
             </table>
         )
     }

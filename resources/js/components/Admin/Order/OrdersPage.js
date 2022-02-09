@@ -1,7 +1,7 @@
 import React, {Component, useEffect} from 'react';
 import OrderList from "./OrderList";
+import SingleOrderOverview from "./SingleOrderOverview"
 import {Route, Routes} from "react-router-dom";
-import CreateOrder from "../Modals/CreateOrder";
 import Menu from "../Menu";
 
 class OrdersPage extends Component {
@@ -35,7 +35,7 @@ class OrdersPage extends Component {
         return (
             <Routes>
                 <Route path="" exact element={<OrderList orders={this.state.orders}/>}/>
-                <Route path=":id" element={<Menu />}/>
+                <Route path=":id" element={<SingleOrderOverview />}/>
             </Routes>
         )
     }

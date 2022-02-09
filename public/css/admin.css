@@ -2,3 +2,41 @@
     background-color: black;
     color: white;
 }
+.orderStatus{
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+    margin-left: 7px;
+    padding: 5px;
+}
+.orderStatus.failed{
+    background-color: #ffadad !important;
+}
+.orderStatus.completed{
+    background-color: #caffbf !important;
+}
+.orderStatus.new{
+    background-color: #9bf6ff !important;
+}
+.orderStatus.pending{
+    background-color: #fdffb6 !important;
+}
+.orderStatus.paid{
+    background-color: #ffd6a5 !important;
+}
+.orderStatus.cancelled{
+    background-color: #ffc6ff !important;
+}
+#orderOverviewHeader{
+    height: 30px;
+    font-size: 15px;
+}
+#orderOverviewHeader .row{
+    margin-top: 10px;
+}
+#orderOverviewHeader .col-2{
+    margin-left: 10px;
+}
+.orderLinesCardImg{
+    width: 100px;
+    height: 100px;
+}
