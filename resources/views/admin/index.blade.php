@@ -4,6 +4,7 @@
         Админ панель
     </title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
     <meta id="csrf_token" name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>

@@ -21,5 +21,6 @@ require('./components/Admin/Modal.js');
 require('./components/Admin/Content.js');
 require('./components/Admin/Customers.js');
 require('./components/Admin/Order/OrderList.js');
+require('./components/Admin/Order/SingleOrder.js');
 require('./components/Admin/Order/OrdersPage.js');
 require('./components/Admin/Menu');

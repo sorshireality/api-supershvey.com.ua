@@ -23,22 +23,20 @@ class OrderLinesController extends Controller
         return $response->getResponse();
     }
 
-    public function showByOrderId($id)
-    {
-        $entity = OrderLines::where('order_id', $id)->get();
-        $response = new ApiResponse(Status::OK, $entity);
-        return $response->getResponse();
-    }
-
     public function show($id)
     {
         $entity = OrderLines::find($id);
 
-        $response = match ((bool)$entity) {
-            true => new ApiResponse(Status::OK, $entity),
-            false => new ApiResponse(Status::NOT_FOUND)
+        if ((bool)$entity == false) {
+            $response = new ApiResponse(Status::NOT_FOUND);
+            return $response->getResponse();
         };
 
+        $product = json_decode(app('\App\Http\Controllers\ProductController')->show($entity->product_id)->getContent())->data;
+        $entity->product = $product;
+        unset($entity->product_id);
+
+        $response = new ApiResponse(Status::OK, $entity);
         return $response->getResponse();
     }
 

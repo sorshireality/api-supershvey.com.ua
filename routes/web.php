@@ -24,16 +24,17 @@ Route::prefix('admin')->group(function () {
     Route::get('/', function () {
         return view('admin.index');
     });
+    Route::prefix('products')->group(function () {
+        Route::get('/', function () {
+            return view('admin.index');
+        });
+    });
     Route::prefix('orders')->group(function () {
         Route::get('/', function () {
             return view('admin.index');
         });
         Route::get('/create', function () {
             return view('admin.index');
-        });
-        Route::post('/create', function () {
-
-
         });
     });
     Route::get('/customers', function () {

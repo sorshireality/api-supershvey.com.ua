@@ -33,7 +33,27 @@ class Menu extends Component {
                                     </Link>
                                 </li>
                                 <li>
-                                    <span className="dropdown-item" data-bs-toggle="modal"  data-bs-target="#staticBackdrop">Добавить</span>
+                                    <span className="dropdown-item" data-bs-toggle="modal"
+                                          data-bs-target="#staticBackdrop">Добавить</span>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Продукты
+                            </a>
+                            <ul className="dropdown-menu dropdown-menu-dark"
+                                aria-labelledby="navbarDarkDropdownMenuLink">
+                                <li>
+                                    <Link to={'/v1/public/admin/products'}>
+                                        <span className="dropdown-item">Обзор</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <span className="dropdown-item" data-bs-toggle="modal"
+                                          data-bs-target="#staticBackdrop">Добавить</span>
                                 </li>
                             </ul>
                         </li>

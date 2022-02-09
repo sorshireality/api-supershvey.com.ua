@@ -26,26 +26,6 @@ class OrderController extends Controller
         return $response->getResponse();
     }
 
-    public function _list()
-    {
-        $orders = Order::all();
-        $response = [];
-        foreach ($orders as $order) {
-            $current_info = new \stdClass();
-            $customer_info = Customers::find($order->customer_id);
-            $current_info->customer = $customer_info;
-
-            $order_lines = OrderLines::where('order_id', $order->id);
-
-            foreach ($order_lines as $line) {
-                dd($line);
-            }
-
-            $response [] = $customer_info;
-        }
-        dd($response);
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -98,7 +78,10 @@ class OrderController extends Controller
     {
         /** @var Order|bool $entity */
         $entity = Order::find($id);
-        if ((bool)$entity) new ApiResponse(Status::NOT_FOUND);
+        if ((bool)$entity == false) {
+            $response = new ApiResponse(Status::NOT_FOUND);
+            return $response->getResponse();
+        }
 
         $customer = json_decode(app('\App\Http\Controllers\CustomerController')->show($entity->customer_id)->getContent())->data;
         $address = json_decode(app('\App\Http\Controllers\AddressController')->show($entity->shipping_address_id)->getContent())->data;
@@ -107,8 +90,26 @@ class OrderController extends Controller
         unset($entity->customer_id);
         $entity->address = $address;
         unset($entity->shipping_address_id);
+        $entity->order_lines = json_decode($this->showOrderLines($id)->getContent())->data;
+        $entity->amount = 0;
+        foreach ($entity->order_lines as $line) {
+            $line->product = json_decode(app('\App\Http\Controllers\ProductController')->show($line->product_id)->getContent())->data;
+            $entity->amount += ($line->product->attributes->price * $line->quantity);
+            unset($line->product_id);
+        }
 
         $response = new ApiResponse(Status::OK, $entity);
+        return $response->getResponse();
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showOrderLines($id)
+    {
+        $order_lines = OrderLines::where('order_id', $id)->get();
+        $response = new ApiResponse(Status::OK, $order_lines);
         return $response->getResponse();
     }
 

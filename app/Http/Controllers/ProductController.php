@@ -73,11 +73,20 @@ class ProductController extends Controller
     {
         $entity = Products::find($id);
 
-        $response = match ((bool)$entity) {
-            true => new ApiResponse(Status::OK, $entity),
-            false => new ApiResponse(Status::NOT_FOUND)
-        };
+        if ((bool)$entity == false) {
+            $response = new ApiResponse(Status::NOT_FOUND);
+            return $response->getResponse();
+        }
 
+        $category = json_decode(app('\App\Http\Controllers\CategoryController')->show($entity->category_id)->getContent())->data;
+        $entity->category = $category;
+        unset($entity->category_id);
+
+        $attributes = json_decode(app('\App\Http\Controllers\AttributesController')->show($entity->id)->getContent())->data;
+        $entity->attributes = $attributes;
+        unset($entity->attributes->product_id);
+
+        $response = new ApiResponse(Status::OK, $entity);
         return $response->getResponse();
     }
 

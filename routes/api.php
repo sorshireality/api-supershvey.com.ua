@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 /** Orders */
 Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index']);
 Route::get('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'show']);
+Route::get('/orders/{id}/order-lines', [\App\Http\Controllers\OrderController::class, 'showOrderLines']);
 Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'store']);
 Route::delete('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'destroy']);
 
