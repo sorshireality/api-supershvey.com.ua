@@ -73,11 +73,17 @@ class CustomerController extends Controller
     {
         $entity = Customers::find($id);
 
-        $response = match ((bool)$entity) {
-            true => new ApiResponse(Status::OK, $entity),
-            false => new ApiResponse(Status::NOT_FOUND)
-        };
+        if ((bool)$entity == false) {
+            $response = new ApiResponse(Status::NOT_FOUND);
+            return $response->getResponse();
+        }
 
+        $address = json_decode(app('\App\Http\Controllers\AddressController')->show($entity->billing_address_id)->getContent())->data;
+
+        $entity->billing_address = $address;
+        unset($entity->billing_address_id);
+
+        $response = new ApiResponse(Status::OK, $entity);
         return $response->getResponse();
     }
 

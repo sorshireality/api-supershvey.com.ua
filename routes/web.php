@@ -38,8 +38,15 @@ Route::prefix('admin')->group(function () {
         });
         Route::get('/{id}', fn() => view('admin.index'));
     });
-    Route::get('/customers', function () {
-        return view('admin.index');
+
+    Route::prefix('customers')->group(function () {
+        Route::get('/', function () {
+            return view('admin.index');
+        });
+        Route::get('/create', function () {
+            return view('admin.index');
+        });
+        Route::get('/{id}', fn() => view('admin.index'));
     });
 });
 //    Route::get('orders', [\App\Http\Controllers\PageController::class, 'showOrders']);

@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import SingleOrderLine from "./SingleOrderLine";
+import SingleCustomerLine from "./SingleCustomerLine";
 
-class OrderList extends Component {
+class CustomerList extends Component {
     state = {
-        order_list: false
+        customer_list: false
     }
 
     constructor(props) {
@@ -11,20 +11,20 @@ class OrderList extends Component {
     }
 
     componentDidMount() {
-        let orders = []
-        this.props.orders.data.map(item => {
-            orders.push(this.getOrderById(item.id))
+        let customers = []
+        this.props.content.data.map(item => {
+            customers.push(this.getCustomerById(item.id))
         })
-        Promise.all(orders).then(r => {
+        Promise.all(customers).then(r => {
             this.setState({
-                order_list: r,
+                customer_list: r,
             })
         })
     }
 
-    getOrderById = (id) => {
+    getCustomerById = (id) => {
         return new Promise((resolve) => {
-            fetch("/v1/public/api/orders/" + id)
+            fetch("/v1/public/api/customers/" + id)
                 .then(res => res.json())
                 .then((result) => {
                     resolve(result.data)
@@ -45,13 +45,11 @@ class OrderList extends Component {
             )
         }
         let crab = null
-        const STATUS_MAP = {
-            'new': "Новый"
-        }
-        if (this.state.order_list) {
-            crab = this.state.order_list.map(value => {
+
+        if (this.state.customer_list) {
+            crab = this.state.customer_list.map(value => {
                 return (
-                    <SingleOrderLine key={value.id} content={value}/>
+                    <SingleCustomerLine key={value.id} content={value}/>
                 )
             })
         }
@@ -60,20 +58,19 @@ class OrderList extends Component {
                 <thead>
                 <tr>
                     <th scope="col">№</th>
-                    <th scope="col">Покупатель</th>
-                    <th scope="col">Адресс доставки</th>
-                    <th scope="col">Цена</th>
-                    <th scope="col">Статус</th>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Фамилия</th>
+                    <th scope="col">Номер телефона</th>
+                    <th scope="col">Почта</th>
                 </tr>
                 </thead>
                 <tbody>
                 {crab ?? placeholder()}
-                <tr><td colSpan={5}>Количество заказов : {this.state.order_list.length}</td></tr>
+                <tr><td colSpan={5}>Количество покупателей : {this.state.customer_list.length}</td></tr>
                 </tbody>
-
             </table>
         )
     }
 }
 
-export default OrderList
+export default CustomerList
