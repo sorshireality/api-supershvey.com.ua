@@ -84,9 +84,15 @@ class AddressController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        //
+        $entity = Address::find($id);
+        $name = $request->name;
+        $entity->$name = $request->value;
+
+        $entity->save();
+
+        return (new ApiResponse(Status::OK, $entity))->getResponse();
     }
 
     /**

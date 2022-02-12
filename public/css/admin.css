@@ -7,6 +7,17 @@ table tbody tr:hover a {
     color: white;
 }
 
+.card input:focus{
+    border: 1px solid black;
+    outline: none;
+}
+.card .custom .row{
+    height: 25px;
+}
+.card .row input{
+    white-space: nowrap;
+}
+
 .orderStatus {
     border: 1px solid lightgrey;
     border-radius: 10px;

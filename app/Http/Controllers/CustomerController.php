@@ -88,11 +88,11 @@ class CustomerController extends Controller
         return $response->getResponse();
     }
 
-    public function showOrders($id){
-        $entity = Order::all()->where("customer_id",$id);
+    public function showOrders($id)
+    {
+        $entity = Order::all()->where("customer_id", $id);
         $response = [];
-        foreach ($entity as $single)
-        {
+        foreach ($entity as $single) {
             $response[] = json_decode(app('\App\Http\Controllers\OrderController')->show($single->id)->getContent())->data;
 
 
@@ -112,9 +112,15 @@ class CustomerController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        //
+        $entity = Customers::find($id);
+        $name = $request->name;
+        $entity->$name = $request->value;
+
+        $entity->save();
+
+        return (new ApiResponse(Status::OK, $entity))->getResponse();
     }
 
     /**

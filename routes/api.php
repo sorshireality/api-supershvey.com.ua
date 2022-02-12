@@ -28,6 +28,7 @@ Route::delete('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'de
 /** Customers */
 Route::delete('/customers/{id}', [\App\Http\Controllers\CustomerController::class, 'destroy']);
 Route::get('/customers/{id}', [\App\Http\Controllers\CustomerController::class, 'show']);
+Route::patch('/customers/{id}', [\App\Http\Controllers\CustomerController::class, 'update']);
 Route::get('/customers/{id}/orders', [\App\Http\Controllers\CustomerController::class, 'showOrders']);
 Route::get('/customers/', [\App\Http\Controllers\CustomerController::class, 'index']);
 Route::post('/customers/', [\App\Http\Controllers\CustomerController::class, 'store']);
@@ -43,6 +44,7 @@ Route::delete('/addresses/{id}', [\App\Http\Controllers\AddressController::class
 Route::post('/addresses', [\App\Http\Controllers\AddressController::class, 'store']);
 Route::get('/addresses', [\App\Http\Controllers\AddressController::class, 'index']);
 Route::get('/addresses/{id}', [\App\Http\Controllers\AddressController::class, 'show']);
+Route::patch('/addresses/{id}', [\App\Http\Controllers\AddressController::class, 'update']);
 
 /** Attributes */
 Route::delete('/attributes/{id}', [\App\Http\Controllers\AttributesController::class, 'destroy']);
