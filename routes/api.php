@@ -28,6 +28,7 @@ Route::delete('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'de
 /** Customers */
 Route::delete('/customers/{id}', [\App\Http\Controllers\CustomerController::class, 'destroy']);
 Route::get('/customers/{id}', [\App\Http\Controllers\CustomerController::class, 'show']);
+Route::get('/customers/{id}/orders', [\App\Http\Controllers\CustomerController::class, 'showOrders']);
 Route::get('/customers/', [\App\Http\Controllers\CustomerController::class, 'index']);
 Route::post('/customers/', [\App\Http\Controllers\CustomerController::class, 'store']);
 

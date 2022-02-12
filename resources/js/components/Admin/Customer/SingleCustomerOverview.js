@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import CustomerCardBody from "../AdditionalEntities/CustomerCardBody"
 import AddressCardBody from "../AdditionalEntities/AddressCardBody"
 import OrderLinesCardBody from "../AdditionalEntities/OrderLinesCardBody"
+import CustomerEbdedOrders from "./CustomerEbdedOrders";
 
 
 class SingleCustomerOverview extends Component {
@@ -44,7 +45,8 @@ class SingleCustomerOverview extends Component {
                 <div id={"orderOverviewHeader"}>
                     <div className="row justify-content-between">
                         <div className="col-2">
-                            Покупатель № {this.state.isLoaded ? this.state.customer.id : <div className="placeholder col-4"/>}
+                            Покупатель № {this.state.isLoaded ? this.state.customer.id :
+                            <div className="placeholder col-4"/>}
                         </div>
                     </div>
                 </div>
@@ -68,7 +70,7 @@ class SingleCustomerOverview extends Component {
                                 Заказы покупателя :
                             </div>
                             <div className="card-body">
-                               быстрый пробег по заказам ...
+                                {this.state.isLoaded ? <CustomerEbdedOrders id={ this.state.customer.id}/> :  <div className={"placeholder col-8"}/>}
                             </div>
                         </div>
                     </div>

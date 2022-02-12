@@ -30,23 +30,15 @@ Route::prefix('admin')->group(function () {
         });
     });
     Route::prefix('orders')->group(function () {
-        Route::get('/', function () {
-            return view('admin.index');
-        });
-        Route::get('/create', function () {
-            return view('admin.index');
-        });
-        Route::get('/{id}', fn() => view('admin.index'));
+        Route::view('/', 'admin.index');
+        Route::view('/{id}', 'admin.index');
+        Route::view('/create', 'admin.index');
     });
 
     Route::prefix('customers')->group(function () {
-        Route::get('/', function () {
-            return view('admin.index');
-        });
-        Route::get('/create', function () {
-            return view('admin.index');
-        });
-        Route::get('/{id}', fn() => view('admin.index'));
+        Route::view('/', 'admin.index');
+        Route::view('/create', 'admin.index');
+        Route::view('/{id}', 'admin.index');
     });
 });
 //    Route::get('orders', [\App\Http\Controllers\PageController::class, 'showOrders']);

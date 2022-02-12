@@ -2,41 +2,68 @@
     background-color: black;
     color: white;
 }
-.orderStatus{
+
+table tbody tr:hover a {
+    color: white;
+}
+
+.orderStatus {
     border: 1px solid lightgrey;
     border-radius: 10px;
     margin-left: 7px;
     padding: 5px;
 }
-.orderStatus.failed{
+
+.orderStatus.failed {
     background-color: #ffadad !important;
 }
-.orderStatus.completed{
+
+.orderStatus.completed {
     background-color: #caffbf !important;
 }
-.orderStatus.new{
+
+.orderStatus.new {
     background-color: #9bf6ff !important;
 }
-.orderStatus.pending{
+
+.orderStatus.pending {
     background-color: #fdffb6 !important;
 }
-.orderStatus.paid{
+
+.orderStatus.paid {
     background-color: #ffd6a5 !important;
 }
-.orderStatus.cancelled{
+
+.orderStatus.cancelled {
     background-color: #ffc6ff !important;
 }
-#orderOverviewHeader{
+
+#orderOverviewHeader {
     height: 30px;
     font-size: 15px;
 }
-#orderOverviewHeader .row{
+
+#orderOverviewHeader .row {
     margin-top: 10px;
 }
-#orderOverviewHeader .col-2{
+
+#orderOverviewHeader .col-2 {
     margin-left: 10px;
 }
-.orderLinesCardImg{
+
+.orderLinesCardImg {
     width: 100px;
     height: 100px;
 }
+
+a {
+    text-underline: none;
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+    color: white;
+}
+

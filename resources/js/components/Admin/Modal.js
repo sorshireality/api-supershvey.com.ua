@@ -5,6 +5,7 @@ import {
     Route
 } from "react-router-dom";
 import CreateOrder from "./Modals/CreateOrder";
+import CreateCustomer from "./Modals/CreateCustomer";
 
 class Modal extends Component {
     state = {
@@ -32,6 +33,7 @@ class Modal extends Component {
                             <h5 className="modal-title" id="staticBackdropLabel">
                                 <Routes>
                                     <Route path="/v1/public/admin/orders" element={"Добавить заказ"}/>
+                                    <Route path="/v1/public/admin/customers" element={"Добавить покупателя"}/>
                                 </Routes>
                             </h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal"
@@ -44,6 +46,8 @@ class Modal extends Component {
                             <Routes>
                                 <Route path="/v1/public/admin/orders"
                                        element={<CreateOrder updateStatus={this.updateProcessStatus}/>}/>
+                                <Route path="/v1/public/admin/customers"
+                                       element={<CreateCustomer updateStatus={this.updateProcessStatus}/>}/>
                             </Routes>
                         </div>
                         <div className="modal-footer">
@@ -51,6 +55,7 @@ class Modal extends Component {
                             <button className="btn btn-primary" type={"submit"} form={"create_modal_form"}>
                                 <Routes>
                                     <Route path="/v1/public/admin/orders" element={"Сохранить"}/>
+                                    <Route path="/v1/public/admin/customers" element={"Сохранить"}/>
                                 </Routes>
                             </button>
                         </div>

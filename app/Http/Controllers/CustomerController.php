@@ -8,6 +8,7 @@ use App\Http\Components\Status;
 use App\Models\Address;
 use App\Models\Composition;
 use App\Models\Customers;
+use App\Models\Order;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -85,6 +86,23 @@ class CustomerController extends Controller
 
         $response = new ApiResponse(Status::OK, $entity);
         return $response->getResponse();
+    }
+
+    public function showOrders($id){
+        $entity = Order::all()->where("customer_id",$id);
+        $response = [];
+        foreach ($entity as $single)
+        {
+            $response[] = json_decode(app('\App\Http\Controllers\OrderController')->show($single->id)->getContent())->data;
+
+
+        }
+        if ((bool)$entity == false) {
+            $response = new ApiResponse(Status::NOT_FOUND);
+            return $response->getResponse();
+        }
+
+        return (new ApiResponse(Status::OK, data: $response))->getResponse();
     }
 
     /**
