@@ -13,13 +13,7 @@ require('./bootstrap');
  */
 
 require('./components/Admin/App.js');
-require('./components/Admin/Modals/CustomerAddForm');
-require('./components/Admin/Modals/AddressAddForm');
-require('./components/Admin/Modals/OrderProductLineForm');
-require('./components/Admin/Modals/CreateOrder');
-require('./components/Admin/Modal.js');
 require('./components/Admin/Content.js');
-require('./components/Admin/Customers.js');
 require('./components/Admin/Order/OrderList.js');
 require('./components/Admin/Order/SingleOrderLine.js');
 require('./components/Admin/Order/SingleOrderOverview.js');

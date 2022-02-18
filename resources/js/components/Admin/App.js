@@ -2,7 +2,6 @@ import React, {Component, useState} from 'react';
 import ReactDOM from 'react-dom';
 import Menu from "./Menu";
 import Content from "./Content";
-import Modal from "./Modal";
 import {
     BrowserRouter,
     Routes,
@@ -14,7 +13,6 @@ function App() {
     return (
         <div className="container">
             <Menu/>
-            <Modal/>
             <Content/>
         </div>
     );

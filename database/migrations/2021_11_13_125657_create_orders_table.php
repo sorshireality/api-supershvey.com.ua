@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->bigInteger('customer_id')->unsigned();
             $table->bigInteger('shipping_address_id')->nullable()->unsigned();
-            $table->enum('status',['new','cancelled','shipped','completed','paid']);
+            $table->enum('status', ['new', 'pending', 'failed', 'cancelled', 'shipped', 'completed', 'paid']);
             $table->timestamps();
             $table->foreign('customer_id')->references('id')->on('customers')->restrictOnDelete();
             $table->foreign('shipping_address_id')->references('id')->on('addresses')->nullOnDelete();

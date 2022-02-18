@@ -66,7 +66,7 @@ class OrderList extends Component {
                     <th scope="col">Статус</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id={"order_list_tbody"}>
                 {crab ?? placeholder()}
                 <tr><td colSpan={5}>Количество заказов : {this.state.order_list.length}</td></tr>
                 </tbody>

@@ -122,7 +122,13 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $entity = Order::find($id);
+        $name = $request->name;
+        $entity->$name = $request->value;
+
+        $entity->save();
+
+        return (new ApiResponse(Status::OK, $entity))->getResponse();
     }
 
     /**

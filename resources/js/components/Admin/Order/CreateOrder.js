@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import CustomerAddForm from "./CustomerAddForm";
-import AddressAddForm from "./AddressAddForm";
-import OrderProductLineForm from "./OrderProductLineForm";
+import CustomerAddForm from "../FormForAddingEntities/CustomerAddForm";
+import AddressAddForm from "../FormForAddingEntities/AddressAddForm";
+import OrderProductLineForm from "../FormForAddingEntities/OrderProductLineForm";
 
 class CreateOrder extends Component {
     state = {
@@ -27,10 +27,16 @@ class CreateOrder extends Component {
         this.setState({[name]: value});
     }
 
+    updateProgress(name) {
+        document.getElementById(name).src = "/v1/public/images/" + name + "_completed.png"
+    }
+
     handleSubmit(event) {
+        document.getElementById("progress_bar").focus()
         let address_id
         let customer_id
-        this.props.updateStatus('Обработка 1/4 [Адресс]')
+        event.preventDefault();
+        this.updateProgress('creating_address')
         new Promise((resolve, _) => {
             if (this.state.isNewAddress) {
                 const requestAddressOptions = {
@@ -57,7 +63,7 @@ class CreateOrder extends Component {
                 resolve(this.state.address_selected ? this.state.address_selected : head_address_id)
             }
         }).then(response => {
-            this.props.updateStatus('Обработка 2/4 [Покупатель]')
+            this.updateProgress('creating_customer')
             address_id = response
             new Promise((resolve, _) => {
                 if (this.state.isNewCustomer) {
@@ -82,7 +88,7 @@ class CreateOrder extends Component {
                     resolve(this.state.customer_selected ? this.state.customer_selected : head_customer_id)
                 }
             }).then((response) => {
-                this.props.updateStatus('Обработка 3/4 [Заказ]')
+                this.updateProgress('creating_order')
                 customer_id = response
                 new Promise((resolve, reject) => {
                     const requestOrderOptions = {
@@ -100,7 +106,7 @@ class CreateOrder extends Component {
                         });
 
                 }).then((response) => {
-                    this.props.updateStatus('Обработка 4/4 [Строки заказа]')
+                    this.updateProgress('creating_order_lines')
                     let order_id = response.id
                     let promises = []
                     let count_request = 0
@@ -128,12 +134,11 @@ class CreateOrder extends Component {
                         }))
                     }
                     Promise.all(promises).then((response) => {
-                        this.props.updateStatus('Успех')
+                        window.location = "/v1/public/admin/orders/" + order_id
                     })
                 })
             })
         })
-        event.preventDefault();
     }
 
     componentDidMount() {
@@ -247,46 +252,69 @@ class CreateOrder extends Component {
             result.push(this.state.order_lines.get(key))
         }
         return result
-
-
     }
+
 
     render() {
         return (
-            <form action={"orders/create"} method={"POST"} id={"create_modal_form"} name={"create_modal_form"}
-                  onSubmit={this.handleSubmit}>
-                <div className={"modalAddEntities"}>
-                    <h4 align={"center"}>Покупатель</h4>
-                    <div>
-                        Уже сущетсвующий ? <input onChange={this.toggleCustomerForm} type="checkbox"/>
+            <div className={"container"}>
+                <div className={"row"} id={"progress_bar"} style={{"textAlign": "center"}}>
+                    <div className="col">
+                        <img src="/v1/public/images/creating_customer_todo.png" alt="" id={"creating_customer"}/>
                     </div>
-                    <CustomerAddForm changingHandler={this.handleChange} isNewCustomer={this.state.isNewCustomer}
-                                     customer={this.state.customer}/>
-                </div>
-                <hr/>
-                <div className={"modalAddEntities"}>
-                    <h4 align={"center"}>Адресс доставки</h4>
-                    <div>
-                        Уже сущетсвующий ? <input onChange={this.toggleAddressForm} type="checkbox"/>
+                    <div className="col">
+                        <img src="/v1/public/images/creating_address_todo.png" alt="" id={"creating_address"}/>
                     </div>
-                    <AddressAddForm changingHandler={this.handleChange} isNewAddress={this.state.isNewAddress}
-                                    address={this.state.address}/>
+                    <div className="col">
+                        <img src="/v1/public/images/creating_order_todo.png" alt="" id={"creating_order"}/>
+                    </div>
+                    <div className="col">
+                        <img src="/v1/public/images/creating_order_lines_todo.png" alt="" id={"creating_order_lines"}/>
+                    </div>
                 </div>
-                <div>
-                    <h4 align={"center"}>Продукты</h4>
-                    <div id={"order_lines"}>
-                        {
+                <form id={"create_modal_form"} name={"create_modal_form"} onSubmit={this.handleSubmit}>
+                    <div className={"container"}>
+                        <div className="row">
+                            <div className="col">
+                                <h4 align={"center"}>Покупатель</h4>
+                                <div>
+                                    Уже сущетсвующий ? <input onChange={this.toggleCustomerForm} type="checkbox"/>
+                                </div>
+                                <CustomerAddForm changingHandler={this.handleChange}
+                                                 isNewCustomer={this.state.isNewCustomer}
+                                                 customer={this.state.customer}/>
+                            </div>
+                            <div className="col">
+                                <h4 align={"center"}>Адресс доставки</h4>
+                                <div>
+                                    Уже сущетсвующий ? <input onChange={this.toggleAddressForm} type="checkbox"/>
+                                </div>
+                                <AddressAddForm changingHandler={this.handleChange} isNewAddress={this.state.isNewAddress}
+                                                address={this.state.address}/>
+                            </div>
+                        </div>
 
-                            this.state.order_lines ?
-                                <React.Fragment>{this.printOrderLines()}</React.Fragment> : 'Loading'
-                        }
                     </div>
+                    <hr/>
                     <div>
-                        {this.state.products ?
-                            <a className={"btn btn-primary"} onClick={this.addProductLine}>Добавить</a> : "Loading ..."}
+                        <h4 align={"center"}>Продукты</h4>
+                        <div id={"order_lines"}>
+                            {
+
+                                this.state.order_lines ?
+                                    <React.Fragment>{this.printOrderLines()}</React.Fragment> : 'Loading'
+                            }
+                        </div>
+                        <div>
+                            {this.state.products ?
+                                <a className={"btn btn-primary"}
+                                   onClick={this.addProductLine}>Добавить ещё одну линию продуктов</a> : "Loading ..."}
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <input form={"create_modal_form"} type={"submit"} className={"col align-self-end btn btn-primary"}
+                           value={"Отправить"}/>
+                </form>
+            </div>
         )
     }
 }

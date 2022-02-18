@@ -54,7 +54,7 @@ class CustomerEbdedOrders extends Component {
                     <th scope="col">Статус</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id={"order_list_tbody"}>
                 <React.Fragment>
                     {getList(this.state.orders)}
                 </React.Fragment>

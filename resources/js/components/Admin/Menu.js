@@ -33,9 +33,8 @@ class Menu extends Component {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={'/v1/public/admin/orders'}>
-                                    <span className="dropdown-item" data-bs-toggle="modal"
-                                          data-bs-target="#staticBackdrop">Добавить</span>
+                                    <Link to={'/v1/public/admin/orders/create'}>
+                                        <span className="dropdown-item">Добавить</span>
                                     </Link>
                                 </li>
                             </ul>
@@ -76,7 +75,7 @@ class Menu extends Component {
                                     <Link to={'/v1/public/admin/customers'}>
                                     <span className="dropdown-item" data-bs-toggle="modal"
                                           data-bs-target="#staticBackdrop">Добавить</span>
-                                </Link>
+                                    </Link>
                                 </li>
                             </ul>
                         </li>

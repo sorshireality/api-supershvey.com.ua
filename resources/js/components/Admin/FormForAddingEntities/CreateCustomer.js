@@ -1,6 +1,5 @@
 import {Component} from "react";
-import CustomerAddForm from "./CustomerAddForm";
-import AddressAddForm from "./AddressAddForm";
+import AddressAddForm from "../FormForAddingEntities/AddressAddForm";
 
 
 class CreateCustomer extends Component {
